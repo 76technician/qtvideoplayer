@@ -1,6 +1,7 @@
 # qtvideoplayer
 a video player by qt-quick and ffmpeg(for encode,decode and capture device)
 development environment： QT 6.2.3  ffmpeg-n4.4-shared
+build by QtCreadtor MinGW_64_bit qmake
 
 lib--ffmpeg's shared lib
 
