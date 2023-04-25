@@ -38,10 +38,31 @@ void AudioPlay::setFormat(int sampleRate, int sampleSize, int Channels){
 }
 
 void AudioPlay::play_sound(uchar *data, int len){
-    long cur_len=len;
     qDebug() << QStringLiteral("play_sound");
-    sound_device->write((const char*)data,cur_len);
-    qDebug() << QStringLiteral("play_sound end");
+    //while(audio->bytesFree()<len);
+    int free_len=audio->bytesFree();
+    int cur_len=len;
+        qDebug() << QStringLiteral("play_sound start")<<cur_len;
+    if(len<=0){
+        free(data);
+        return ;
+    }
+    while(len!=0){
+        if(free_len>=len){
+            sound_device->write((char*)data,len);
+            data+=len;
+            len=0;
+        }else{
+            qDebug() << QStringLiteral("不够用");
+            if(free_len>0){
+            sound_device->write((char*)data,free_len);
+            data+=free_len;
+            len-=free_len;
+            }
+        }
+        free_len=audio->bytesFree();
+    }
+    data-=cur_len;
     free(data);
     qDebug() << QStringLiteral("play_sound free");
 }

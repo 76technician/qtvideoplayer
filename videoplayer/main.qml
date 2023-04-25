@@ -8,6 +8,11 @@ import Demuxed
 import AudioPlay
 import VideoThread
 import CaptureVideo
+import CaptureAudio
+import RtspPush
+import RtspPull
+import AudioThread
+
 ApplicationWindow   {
     id:top_window
     width: 1000
@@ -76,8 +81,20 @@ ApplicationWindow   {
     VideoThread{
         id:video_thread
     }
+    AudioThread{
+        id:audio_thread
+    }
     CaptureVideo{
         id: capturevideo
+    }
+    CaptureAudio{
+        id:captureaudio
+    }
+    RtspPush{
+        id:rtsppush
+    }
+    RtspPull{
+        id:rtsppull
     }
 
     FileDialog {
@@ -107,6 +124,100 @@ ApplicationWindow   {
              demux.start()
          }
      }
+    //select camera device
+    ComboBox {
+        id: select_box
+        anchors.right:parent.right
+        anchors.rightMargin: 25
+        anchors.top: parent.top
+        anchors.topMargin: 25
+        editable:true
+        model: ListModel{
+            id: model
+           ListElement { text: " " }
+        }
+        delegate: ItemDelegate { //呈现标准视图项 以在各种控件和控件中用作委托
+          width: select_box.width
+          contentItem: Text {
+              text: modelData   //即model中的数据
+              color: "red"
+              font: select_box.font
+              verticalAlignment: Text.AlignVCenter
+          }
+        }
+        contentItem: Text { //界面上显示出来的文字
+          leftPadding: 5 //左部填充为5
+          text: select_box.displayText //表示ComboBox上显示的文本
+          font: select_box.font    //文字大小
+          color: select_box.pressed ? "orange" : "black"   //文字颜色
+          verticalAlignment: Text.AlignVCenter  //文字位置
+        }
+        background: Rectangle {   //背景项
+          implicitWidth: 120
+          implicitHeight: 40
+          color: "#70f3ff"
+          border.width: 1
+          radius: 2
+        }
+        onActivated:  {
+            console.log("已选择",currentText)
+            //select_box.visible=false
+            capturevideo.open()
+            capturevideo.video_codec(currentText)
+            capturevideo.start()
+//            rtsppush.open()
+//            rtsppush.start()
+//            video_thread.open()
+//            video_thread.set_mod(1)
+//            video_thread.start()
+        }
+    }
+
+    ComboBox {
+        id: select_box_two
+        anchors.right:parent.right
+        anchors.rightMargin: 25
+        anchors.top: select_box.bottom
+        anchors.topMargin: 25
+        editable:true
+        model: ListModel{
+            id: device_text
+           ListElement { text: " " }
+        }
+        delegate: ItemDelegate { //呈现标准视图项 以在各种控件和控件中用作委托
+          width: select_box_two.width
+          contentItem: Text {
+              text: modelData   //即model中的数据
+              color: "red"
+              font: select_box_two.font
+              verticalAlignment: Text.AlignVCenter
+          }
+        }
+        contentItem: Text { //界面上显示出来的文字
+          leftPadding: 5 //左部填充为5
+          text: select_box_two.displayText //表示ComboBox上显示的文本
+          font: select_box_two.font    //文字大小
+          color: select_box_two.pressed ? "orange" : "black"   //文字颜色
+          verticalAlignment: Text.AlignVCenter  //文字位置
+        }
+        background: Rectangle {   //背景项
+          implicitWidth: 120
+          implicitHeight: 40
+          color: "#70f3ff"
+          border.width: 1
+          radius: 2
+        }
+        onActivated:  {
+            console.log("已选择",currentText)
+            //select_box.visible=false
+            captureaudio.audio_codec(currentText)
+            rtsppush.open()
+            rtsppush.start()
+            captureaudio.open()
+            captureaudio.start()
+        }
+    }
+
     //button for file Dialog
     Rectangle{
          id: fileselect
@@ -151,7 +262,7 @@ ApplicationWindow   {
               }
          }
      }
-    //button for capture device
+    //button for capture  cam device
     Rectangle{
          id: capture
          anchors.right: parent.right
@@ -160,7 +271,7 @@ ApplicationWindow   {
          anchors.bottomMargin: 25
          color: '#1661ab'
          Text{
-             text: "发送"
+             text: "发送视频"
              anchors.centerIn: parent
          }
          width: 43
@@ -169,11 +280,6 @@ ApplicationWindow   {
               anchors.fill: parent
               onClicked: {
                   capturevideo.find_video_device()
-                  video_thread.open()
-                  video_thread.set_mod(1)
-                  capturevideo.open()
-                  video_thread.start()
-                  capturevideo.start()
               }
          }
      }
@@ -196,21 +302,124 @@ ApplicationWindow   {
               onClicked: {
                   capturevideo.stop()
                   capturevideo.terminate()
-                  video_thread.stop()
-                  video_thread.terminate()
+                  rtsppush.stop()
+                  rtsppush.terminate()
               }
          }
      }
+    //button for capture  audio device
+    Rectangle{
+         id: audio
+         anchors.right: parent.right
+         anchors.rightMargin: 25
+         anchors.bottom: capture.top
+         anchors.bottomMargin: 25
+         color: '#1661ab'
+         Text{
+             text: "发送音频"
+             anchors.centerIn: parent
+         }
+         width: 43
+         height: 25
+         MouseArea{
+              anchors.fill: parent
+              onClicked: {
+                  captureaudio.find_audio_device()
+                  captureaudio.encode_init_context()
+                  capturevideo.encode_init_context()
+              }
+         }
+     }
+    //button for quit capture audio
+    Rectangle{
+         id: audioquit
+         anchors.right:capture.left
+         anchors.rightMargin: 25
+         anchors.bottom: capture.top
+         anchors.bottomMargin: 25
+         color: '#1661ab'
+         Text{
+             text: "终止"
+             anchors.centerIn: parent
+         }
+         width: 43
+         height: 25
+         MouseArea{
+              anchors.fill: parent
+              onClicked: {
+                  captureaudio.stop()
+                  captureaudio.terminate()
+                  rtsppush.stop()
+                  rtsppush.terminate()
+              }
+         }
+     }
+    //button for receive rtsp  stream
+    Rectangle{
+         id: rtsp_pull
+         anchors.right: parent.right
+         anchors.rightMargin: 25
+         anchors.bottom: audio.top
+         anchors.bottomMargin: 25
+         color: '#363433'
+         Text{
+             text: "拉流"
+             anchors.centerIn: parent
+         }
+         width: 43
+         height: 25
+         MouseArea{
+              anchors.fill: parent
+              onClicked: {
+                  video_thread.open()
+                  video_thread.set_mod(0)
+                  video_thread.start()
+                  audio_thread.open()
+                  audio_thread.start()
+                rtsppull.rtsp_init()
+                rtsppull.open()
+                rtsppull.start()
+              }
+         }
+     }
+    //button for quit recevie rtsp stream
+    Rectangle{
+         id: rtsp_pull_quit
+         anchors.right:capture.left
+         anchors.rightMargin: 25
+         anchors.bottom: audio.top
+         anchors.bottomMargin: 25
+         color: '#363433'
+         Text{
+             text: "终止"
+             anchors.centerIn: parent
+         }
+         width: 43
+         height: 25
+         MouseArea{
+              anchors.fill: parent
+              onClicked: {
+                rtsppull.stop()
+                rtsppull.terminate()
+                video_thread.stop()
+                video_thread.terminate()
+                audio_thread.stop()
+                audio_thread.terminate()
+              }
+         }
+     }
+
+
     //button for capture develop
     Rectangle{
          id: record
          anchors.right: parent.right
          anchors.rightMargin: 25
-         anchors.bottom: capture.top
+         anchors.bottom: rtsp_pull.top
          anchors.bottomMargin: 25
          color: '#f0d695'
          Text{
-             text: "录制"
+             text: "发送桌面"
              anchors.centerIn: parent
          }
          width: 43
@@ -220,20 +429,16 @@ ApplicationWindow   {
               onClicked: {
                   capturevideo.record_screen_init()
                   capturevideo.open()
-                  video_thread.open()
-                  video_thread.set_mod(1)
-                  video_thread.start()
                   capturevideo.start()
               }
          }
      }
-    //button for quit develop
     //button for quit capture Video
     Rectangle{
          id: developequit
          anchors.right:record.left
          anchors.rightMargin: 25
-         anchors.bottom: capturequit.top
+         anchors.bottom: rtsp_pull.top
          anchors.bottomMargin: 25
          color: '#f0d695'
          Text{
@@ -247,19 +452,13 @@ ApplicationWindow   {
               onClicked: {
                   capturevideo.stop()
                   capturevideo.terminate()
-                  video_thread.stop()
-                  video_thread.terminate()
+                  rtsppush.stop()
+                  rtsppush.terminate()
               }
          }
      }
     Connections{
              target: demux
-             function onSend_frame(frame){
-                  //更改sink中帧
-                 //producer.handleTimeout(data)
-                 producer.paint_frame(frame)
-                 console.log("收到frame emit")
-             }
              function onFormat_solt(sampleRate,sampleSize,channel){
                  console.log("audio format emit")
                  aduioplay.setFormat(sampleRate,sampleSize,channel)
@@ -284,6 +483,60 @@ ApplicationWindow   {
              }
      }
     Connections{
+             target: rtsppull
+//             function onFormat_solt(sampleRate,sampleSize,channel){
+//                 console.log("audio format emit")
+//                 aduioplay.setFormat(sampleRate,sampleSize,channel)
+//             }
+//             function onSend_pcm(data,len,cur_len){
+//                 console.log("audio data receive")
+//                 aduioplay.play_sound(data,len);
+//                 videoslider.value=cur_len
+//             }
+             function onAudio_rtsp_init(para){
+                audio_thread.audio_decode(para)
+             }
+             function onVideo_rtsp_init(para,time_base,sum){
+                 video_thread.video_encode_init(para,time_base)
+                 videoslider.visible=true
+                 videoslider.to=sum;
+             }
+//             function onRtsp_sync(mesc){
+//                 console.log("audio set video sync")
+//                 video_thread.setSync(mesc);
+//             }
+             function onRtsp_send_pkt(pkt,f){
+                if(f===0){
+                 console.log("video data receive")
+                 video_thread.receive_pkt(pkt);
+                }
+                if(f===1){
+                console.log("audio data receive")
+                audio_thread.receive_pkt(pkt);
+                }
+             }
+     }
+    Connections{
+        target:audio_thread
+        function onFormat_solt(sampleRate,sampleSize,channel){
+            console.log("audio format emit")
+            aduioplay.setFormat(sampleRate,sampleSize,channel)
+        }
+        function onSend_pcm(data,len,cur_len){
+            console.log("audio data receive")
+            aduioplay.play_sound(data,len);
+            videoslider.value=cur_len
+        }
+        function onRtsp_sync(mesc){
+         console.log("audio set video sync")
+         video_thread.setSync(mesc);
+        }
+        function onSet_nb_samples(a){
+            rtsppull.set_nb_samples(a);
+        }
+    }
+
+    Connections{
          target: video_thread
          function onSend_image(image){
              producer.paint_frame(image)
@@ -295,10 +548,45 @@ ApplicationWindow   {
          function onVideo_play_init(pCodeP){
             video_thread.video_encode_init(pCodeP,0)
          }
-         function onSend_pkt(pkt){
-            video_thread.receive_pkt(pkt);
+//         function onSend_pkt(pkt){
+//            video_thread.receive_pkt(pkt);
+//         }
+         function onAdd_device(s){
+            console.log("设置 device 成功")
+            select_box.model.append({text: s})
+         }
+         function onSend_pkt(pkt,f){
+            console.log("传入 视频帧")
+            rtsppush.receive_pkt(pkt,f)
+         }
+         function onInit_h264_stream(eCodec,eCodecCtx,f){
+              console.log("配置输出流 video")
+             rtsppush.init_out_stream(eCodec,eCodecCtx,f)
          }
      }
+    Connections{
+        target: captureaudio
+        function onFormat_solt(sampleRate,sampleSize,channel){
+            console.log("audio format emit")
+            aduioplay.setFormat(sampleRate,sampleSize,channel)
+        }
+        function onSend_pcm(data,len){
+            console.log("audio data receive")
+            aduioplay.play_sound(data,len);
+        }
+        function onAdd_device(s){
+           console.log("设置 device 成功")
+           select_box_two.model.append({text: s})
+        }
+        function onSend_pkt(pkt,f){
+           console.log("传入 音频帧")
+           rtsppush.receive_pkt(pkt,f)
+        }
+        function onInit_acc_stream(eCodec,eCodecCtx,f){
+           console.log("配置输出流 audio")
+           rtsppush.init_out_stream(eCodec,eCodecCtx,f)
+        }
+    }
 
     Rectangle {
          //视频输出框

@@ -2,7 +2,6 @@
 #define AUDIOITEM_H
 #include <QObject>
 #include <QPointer>
-#include <QAudioDevice>
 #include <QQmlEngine>
 #include <QTimer>
 #include <QAudioFormat>
@@ -24,6 +23,7 @@ public:
     Q_INVOKABLE void setFormat(int sampleRate, int sampleSize, int Channels);
     Q_INVOKABLE void play_sound(uchar* data,int len);
     void setAudioSink();
+
 signals:
     void audioDeviceChanged();
 private:

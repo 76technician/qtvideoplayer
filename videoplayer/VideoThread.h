@@ -39,13 +39,13 @@ private:
     SwsContext* vctx;
     AVFormatContext *qAfc; //媒体信息描述
     AVCodecContext* vCodec; // 编解码信息
-    AVCodec *vCode;
+    const AVCodec *vCode;
     QQueue<QImage> images;
-    long long time_base=1;
     long long sync=0;
     bool first_repaint=true;
     int ret=0;
     long long  flag=1;
+    bool sws =false;
     std::mutex video_mutex;
 };
 #endif // VIDEOTHREAD_H

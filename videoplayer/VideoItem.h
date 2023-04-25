@@ -2,6 +2,7 @@
 #define VIDEOITEM_H
 #include <QObject>
 #include <QPointer>
+#include <QAudioDevice>
 #include <QVideoSink>
 #include <QQmlEngine>
 #include <QTimer>
