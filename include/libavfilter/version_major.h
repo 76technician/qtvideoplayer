@@ -1,4 +1,6 @@
 /*
+ * Version macros.
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -16,32 +18,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_HWCONTEXT_MEDIACODEC_H
-#define AVUTIL_HWCONTEXT_MEDIACODEC_H
+#ifndef AVFILTER_VERSION_MAJOR_H
+#define AVFILTER_VERSION_MAJOR_H
 
 /**
- * MediaCodec details.
- *
- * Allocated as AVHWDeviceContext.hwctx
+ * @file
+ * @ingroup lavfi
+ * Libavfilter version macros
  */
-typedef struct AVMediaCodecDeviceContext {
-    /**
-     * android/view/Surface handle, to be filled by the user.
-     *
-     * This is the default surface used by decoders on this device.
-     */
-    void *surface;
 
-    /**
-     * Pointer to ANativeWindow.
-     *
-     * It both surface and native_window is NULL, try to create it
-     * automatically if OS support.
-     *
-     * It can be used as output surface for decoder and input surface for
-     * encoder.
-     */
-    void *native_window;
-} AVMediaCodecDeviceContext;
+#define LIBAVFILTER_VERSION_MAJOR   8
 
-#endif /* AVUTIL_HWCONTEXT_MEDIACODEC_H */
+/**
+ * FF_API_* defines may be placed below to indicate public API that will be
+ * dropped at a future version bump. The defines themselves are not part of
+ * the public API and may change, break or disappear at any time.
+ */
+
+#define FF_API_SWS_PARAM_OPTION             (LIBAVFILTER_VERSION_MAJOR < 9)
+#define FF_API_BUFFERSINK_ALLOC             (LIBAVFILTER_VERSION_MAJOR < 9)
+#define FF_API_PAD_COUNT                    (LIBAVFILTER_VERSION_MAJOR < 9)
+
+#endif /* AVFILTER_VERSION_MAJOR_H */

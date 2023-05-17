@@ -1,44 +1,46 @@
 /*
- * This file is part of FFmpeg.
+ * Version macros.
  *
- * FFmpeg is free software; you can redistribute it and/or
+ * This file is part of libswresample
+ *
+ * libswresample is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * FFmpeg is distributed in the hope that it will be useful,
+ * libswresample is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with FFmpeg; if not, write to the Free Software
+ * License along with libswresample; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef SWSCALE_VERSION_H
-#define SWSCALE_VERSION_H
+#ifndef SWRESAMPLE_VERSION_H
+#define SWRESAMPLE_VERSION_H
 
 /**
  * @file
- * swscale version macros
+ * Libswresample version macros
  */
 
 #include "libavutil/version.h"
 
 #include "version_major.h"
 
-#define LIBSWSCALE_VERSION_MINOR   8
-#define LIBSWSCALE_VERSION_MICRO 112
+#define LIBSWRESAMPLE_VERSION_MINOR   9
+#define LIBSWRESAMPLE_VERSION_MICRO 100
 
-#define LIBSWSCALE_VERSION_INT  AV_VERSION_INT(LIBSWSCALE_VERSION_MAJOR, \
-                                               LIBSWSCALE_VERSION_MINOR, \
-                                               LIBSWSCALE_VERSION_MICRO)
-#define LIBSWSCALE_VERSION      AV_VERSION(LIBSWSCALE_VERSION_MAJOR, \
-                                           LIBSWSCALE_VERSION_MINOR, \
-                                           LIBSWSCALE_VERSION_MICRO)
-#define LIBSWSCALE_BUILD        LIBSWSCALE_VERSION_INT
+#define LIBSWRESAMPLE_VERSION_INT  AV_VERSION_INT(LIBSWRESAMPLE_VERSION_MAJOR, \
+                                                  LIBSWRESAMPLE_VERSION_MINOR, \
+                                                  LIBSWRESAMPLE_VERSION_MICRO)
+#define LIBSWRESAMPLE_VERSION      AV_VERSION(LIBSWRESAMPLE_VERSION_MAJOR, \
+                                              LIBSWRESAMPLE_VERSION_MINOR, \
+                                              LIBSWRESAMPLE_VERSION_MICRO)
+#define LIBSWRESAMPLE_BUILD        LIBSWRESAMPLE_VERSION_INT
 
-#define LIBSWSCALE_IDENT        "SwS" AV_STRINGIFY(LIBSWSCALE_VERSION)
+#define LIBSWRESAMPLE_IDENT        "SwR" AV_STRINGIFY(LIBSWRESAMPLE_VERSION)
 
-#endif /* SWSCALE_VERSION_H */
+#endif /* SWRESAMPLE_VERSION_H */
