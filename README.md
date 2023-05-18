@@ -17,9 +17,13 @@ RunDll-- necessary running files
    CaptureAudio(thread) capture audio from micphone or your sound card  and send packed encoded by acc to rtsppush
 
    Demuxed(thread) demux media file and send avpacket to videoThread ,send pcm to AudioItem(In fact,the consistency of video and audio's true by audio's pts)**（only loca file）**
+   
    VideoThread(thread) decode video frame,convert video frame to QImage,final displayed on the VideoItem
+   
    VideoItem It receive QImage and drawer it in QVideoFrame's buff,and via VideoSink to diaplay every VideoFrame
+   
    AudioThread(thread) decode audio frame,convert audio frame to pcm raw data **(only online's file)**
+   
    AudioItem It receive pdm,and send data to AudioDevice's buff.
 
 
