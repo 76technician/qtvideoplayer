@@ -44,6 +44,7 @@ class RtspPull: public QThread
         Q_INVOKABLE void stop();
         Q_INVOKABLE void open();
         Q_INVOKABLE void set_nb_samples(int a);
+        Q_INVOKABLE void set_rtsp_address(QString s);
         void run();
         double r2d(AVRational r);
     signals:
@@ -60,14 +61,14 @@ class RtspPull: public QThread
         long long num=0;
         bool Stop_Quit=true;
         int sampleRate,sampleSize;
-        //char* rtsp_address="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4";
-        char* rtsp_address="rtsp://xxx.xxx.xxx.xxx/helofish/video";
+        char* rtsp_address;
         int videoindex=-1,audioindex=-1;
         AVCodecContext* aCodec;
         const AVCodec *aCode;
         SwrContext* actx;
         long long wait_time=0;
         int nb_samples=1024;
+        long long tmp=0;
 
 };
 

@@ -218,6 +218,65 @@ ApplicationWindow   {
         }
     }
 
+    TextField{
+        id:rtsp_address
+        anchors.left: parent.left
+        anchors.leftMargin: 25
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 15
+        placeholderText:qsTr("rtsp://xxx.xxx.xxx.xxx")
+        font.family: "Microsoft YaHei"
+        font.pixelSize: 14
+        width:250
+        height:32
+        background: Rectangle {
+            border.color: "black"
+        }
+    }
+    Rectangle{
+        id: enter_add
+        anchors.left:rtsp_address.right
+        anchors.leftMargin: 25
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 15
+        color: '#2b73af'
+        Text{
+            text: "pull确定"
+            anchors.centerIn: parent
+        }
+        width: 50
+        height: 25
+        MouseArea{
+             anchors.fill: parent
+             onClicked: {
+                 rtsppull.set_rtsp_address(rtsp_address.text)
+                 rtsppush.set_rtsp_address(rtsp_address.text)
+                 console.log("sent rtsp address");
+            }
+        }
+    }
+    Rectangle{
+        id: enter_adds
+        anchors.left:enter_add.right
+        anchors.leftMargin: 25
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 15
+        color: '#2b73af'
+        Text{
+            text: "push确定"
+            anchors.centerIn: parent
+        }
+        width: 50
+        height: 25
+        MouseArea{
+             anchors.fill: parent
+             onClicked: {
+                 rtsppush.set_rtsp_address(rtsp_address.text)
+                 console.log("sent rtsp address");
+            }
+        }
+    }
+
     //button for file Dialog
     Rectangle{
          id: fileselect
@@ -225,12 +284,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: parent.bottom
          anchors.bottomMargin: 25
-         color: '#475164'
+         color: '#2b73af'
          Text{
              text: "选择"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -244,12 +303,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: parent.bottom
          anchors.bottomMargin: 25
-         color: '#475164'
+         color: '#eea2a4'
          Text{
              text: "终止"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -269,12 +328,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: fileselect.top
          anchors.bottomMargin: 25
-         color: '#1661ab'
+         color: '#2b73af'
          Text{
              text: "发送视频"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -290,12 +349,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: threadquit.top
          anchors.bottomMargin: 25
-         color: '#1661ab'
+         color: '#eea2a4'
          Text{
              text: "终止"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -314,12 +373,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: capture.top
          anchors.bottomMargin: 25
-         color: '#1661ab'
+         color: '#2b73af'
          Text{
              text: "发送音频"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -337,12 +396,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: capture.top
          anchors.bottomMargin: 25
-         color: '#1661ab'
+         color: '#eea2a4'
          Text{
              text: "终止"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -361,12 +420,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: audio.top
          anchors.bottomMargin: 25
-         color: '#363433'
+         color: '#2b73af'
          Text{
              text: "拉流"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -389,12 +448,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: audio.top
          anchors.bottomMargin: 25
-         color: '#363433'
+         color: '#eea2a4'
          Text{
              text: "终止"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -417,12 +476,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: rtsp_pull.top
          anchors.bottomMargin: 25
-         color: '#f0d695'
+         color: '#2b73af'
          Text{
              text: "发送桌面"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent
@@ -440,12 +499,12 @@ ApplicationWindow   {
          anchors.rightMargin: 25
          anchors.bottom: rtsp_pull.top
          anchors.bottomMargin: 25
-         color: '#f0d695'
+         color: '#eea2a4'
          Text{
              text: "终止"
              anchors.centerIn: parent
          }
-         width: 43
+         width: 45
          height: 25
          MouseArea{
               anchors.fill: parent

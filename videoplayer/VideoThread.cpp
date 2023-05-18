@@ -153,7 +153,7 @@ void VideoThread::video_encode_init(AVCodecParameters *para,long long time_base)
     vCodec->thread_count=2;
    //打开解码器
     AVDictionary* options = NULL;
-    av_dict_set(&options, "tune", "zerolatency", 0);
+    //av_dict_set(&options, "tune", "zerolatency", 0);
     ret = avcodec_open2(vCodec,vCode,nullptr);
     if(ret < 0){
         qDebug() << QStringLiteral("打开解码器失败");

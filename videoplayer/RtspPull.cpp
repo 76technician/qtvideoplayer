@@ -4,8 +4,8 @@ void RtspPull::rtsp_init(){
     avformat_network_init();
     qWarning()<<"rtsp_init";
     AVDictionary* options = NULL;
-    av_dict_set(&options, "rtsp_transport", "tcp", 0); //udp会花屏
-    //av_dict_set(&options, "buffer_size", "1280000", 0);
+    av_dict_set(&options, "rtsp_transport", "tcp", 0); //udp会花屏丢图像
+    //av_dict_set(&options, "buffer_size", "2048000", 0);
     if((ret = avformat_open_input(&ifmt_ctx, rtsp_address, NULL, &options)) < 0) {
         qWarning()<<"Cannot open input file"<<ret;
         return ;
@@ -37,6 +37,12 @@ void RtspPull::rtsp_init(){
     av_bsf_init(bsf_ctx);
     emit video_rtsp_init(ifmt_ctx->streams[videoindex]->codecpar,(long long)
                    (1000 * (r2d(ifmt_ctx->streams[videoindex]->time_base))),ifmt_ctx->duration/AV_TIME_BASE);
+}
+
+void RtspPull::set_rtsp_address(QString s){
+    QByteArray tmp=s.toLatin1();
+    rtsp_address=tmp.data();
+    qWarning()<<"pull"<< s;
 }
 
 //转换为秒为单位的时间基
@@ -81,6 +87,9 @@ void RtspPull::run(){
 //                }
 //            }
 //            av_packet_free(&pkt);
+//            qWarning()
+//                      <<pkt->size <<tmp <<"video pkt size is";
+//            tmp++;
             emit rtsp_send_pkt(pkt,0);
         }else if(pkt->stream_index==audioindex){
             //重采样 发出pcm

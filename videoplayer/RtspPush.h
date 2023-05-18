@@ -43,6 +43,7 @@ public:
     Q_INVOKABLE void stop();
     Q_INVOKABLE void open();
     Q_INVOKABLE void init_out_stream(const AVCodec* codec,AVCodecContext* codectx,int flag);
+    Q_INVOKABLE void set_rtsp_address(QString s);
     void run();
 private:
     AVFormatContext* ofmt_ctx=NULL;
@@ -55,7 +56,7 @@ private:
     QQueue<AVPacket*> pkt_gc;
     int videoindex=-1,audioindex=-1;
     QMutex que;
-    char *rtsp_address= "rtsp://xxx.xxx.xxx.xxx/helofish/video";
+    char *rtsp_address= "rtsp://101.43.247.56/helofish/video";
 };
 
 #endif // RTSPPUSH_H

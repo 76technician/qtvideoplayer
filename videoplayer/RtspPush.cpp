@@ -12,6 +12,12 @@ void RtspPush::rtsp_init(){
 
 }
 
+void RtspPush::set_rtsp_address(QString s){
+    QByteArray tmp=s.toLatin1();
+    rtsp_address=tmp.data();
+    qWarning()<<"push"<< s;
+}
+
 void RtspPush::init_out_stream(const AVCodec *codec, AVCodecContext *codectx,int video_or_audio){
         if(!ofmt_ctx) rtsp_init();
         AVStream *stream;
